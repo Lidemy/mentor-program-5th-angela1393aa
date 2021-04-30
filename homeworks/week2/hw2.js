@@ -1,4 +1,5 @@
 function capitalize(str){
+  if(str === '') return '' 
   var str1 = str[0].toUpperCase()
   for(var i=1; i<str.length; i++){
     str1 +=str[i]
@@ -8,3 +9,5 @@ function capitalize(str){
 
 
 console.log(capitalize(',hello'))
+
+console.log(capitalize(''))

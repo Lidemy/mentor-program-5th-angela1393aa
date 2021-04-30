@@ -1,10 +1,10 @@
 function reverse(str){  
-  var box = ''
+  var str1 = ''
   var length =str.length    
   for(var i = length-1; i>=0; i--){
-    box = box + str[i]
+    str1 = str1 + str[i]
   }
-  console.log(box)
+  console.log(str1)
 }
 
 reverse('hello');
