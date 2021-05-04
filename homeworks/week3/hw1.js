@@ -1,23 +1,23 @@
-var readline = require('readline');
-var rl = readline.createInterface({
-  input: process.stdin 
-});
+const readline = require('readline')
 
-var lines = []
+const rl = readline.createInterface({
+  input: process.stdin
+})
 
-rl.on('line', function (line) {
+const lines = []
+
+rl.on('line', (line) => {
   lines.push(line)
-});
+})
 
-rl.on('close', function() {
+rl.on('close', () => {
   solve(lines)
 })
 
-
-function solve(n){
-var str=''
-for(i=1;i<=n;i++){
-str+='*'
-console.log(str)}
+function solve(n) {
+  let str = ''
+  for (let i = 1; i <= n; i++) {
+    str += '*'
+    console.log(str)
+  }
 }
-
