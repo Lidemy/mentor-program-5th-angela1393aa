@@ -64,7 +64,8 @@ function createBook(name) {
     if (err) {
       return console.log('err', err)
     }
-    console.log('新增成功！')
+    const data = JSON.parse(res.body)
+    console.log(`新增成功！ name :${data.name} id :${data.id}`)
   })
 }
 
