@@ -22,19 +22,19 @@
         padding: 64px 32px;
       }
 
-      .apply-form__title {
+      .info__title {
         margin: 0;
         font-size: 36px;
         font-weight: bold;
       }
 
-      .apply-form__desc {
+      .info__desc {
         margin-top: 32px;
         font-size: 14px;
         line-height: 1.5em;
       }
 
-      .apply-form__notice {
+      .remind {
         color: #e74149;
         font-size: 16px;
         margin-top: 20px;
@@ -96,15 +96,14 @@
 
 <body>
   <div class="wrapper">
-    <form class="apply-form">
-      <h1 class="apply-form__title">新拖延運動報名表單</h1>
-      <p class="apply-form__desc">
-        活動日期：2020/12/10 ~ 2020/12/11<br>
-        活動地點：台北市大安區新生南路二段1號
-      </p>
-      <p class="apply-form__notice">
-        * 必填
-      </p>
+    <h1 class="info__title">新拖延運動報名表單</h1>
+    <div class="info__desc">
+      活動日期：2020/12/10 ~ 2020/12/11
+      <br>
+      活動地點：台北市大安區新生南路二段1號
+    </div>
+    <div class="remind">* 必填</div>
+    <form>
       <div class="input-block">
         <div class="input-block__title required">
           暱稱
@@ -135,11 +134,11 @@
         </div>
         <div class="input-block__input">
           <label>
-            <input name="type" value="1" type="radio" /> 躺在床上用想像力實作
+            <input name="choice__content" value="1" type="radio" /> 躺在床上用想像力實作
           </label>
 
           <label>
-            <input name="type" value="2" type="radio" />
+            <input name="choice__content" value="2" type="radio" />
              趴在地上滑手機找現成的
           </label>
         </div>
