@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .wrapper{
+            width: 400px;
+            height: 600px;
+            border:2px solid mediumaquamarine;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .todo__bottom{
+            list-style: none; 
+            
+            
+        }
+        h1{
+            color: mediumaquamarine;
+        }
+        .todo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 20px;
+            
+            
+        }
+        .todo.done.todo_title{
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>today list!</h1>
+        <div class="todo_top">
+          <input type="text" class="todo_input" >
+          <button class="btn_new">新增</button>
+        </div>
+        <div class="todo_bottom">
+            <!-- <div class="todo">
+                <input type="checkbox" class="todo_check">
+              <div class="todo_title">fix bug</div>
+              <button class="btn_delete">刪除</button>
+            </div> -->
+        </div>
+    </div>
+   
+      <script>
+    
+        document.querySelector('.btn_new').addEventListener('click',
+          function(){
+            const value = document.querySelector('.todo_input').value;
+            if(!value) return
+            const div = document.createElement('div')
+            div.classList.add('todo')
+            div.innerHTML = `
+              <input type="checkbox" class="todo_check">
+              <div class="todo_title">${escapeHtml(value)}</div>
+              <button class="btn_delete">刪除</button>
+            `
+            document.querySelector('.todo_bottom').appendChild(div)
+            document.querySelector('.todo_input').value = ''
+        });
+        function escapeHtml(unsafe) {
+          return unsafe
+             .replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
+        }
+        document.querySelector('.todo_bottom').addEventListener('click',
+          function(event){
+            const { target } = event
+            if(target.classList.contains('btn_delete')){
+              target.parentNode.remove()
+              return
+            }
+    
+            if(target.classList.contains('todo_check')){
+              if(target.checked){
+                target.parentNode.classList.add('done')
+              } else {
+                target.parentNode.classList.remove('done')
+              }
+            }
+        })
+    
+        
+      </script>
+</body>
+</html>
