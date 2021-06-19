@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- normalize.css -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <title>hw2</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #eee;
+      }
+
+      h2 {
+        margin: 0;
+      }
+
+      .wrapper {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0px 12px;
+      }
+
+      .navbar {
+        box-shadow: -1.4px -1.4px 6px 0 #97a2a0;
+        background: white;
+      }
+
+      .navbar .wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 84px;
+        background: white;
+        padding: 0px 20px;
+      }
+
+      .navbar__site-name {
+        color: #000;
+        font-size: 36px;
+      }
+
+      .navbar__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        font-size: 18px;
+      }
+
+      .navbar__list li {
+        display: block;
+        height: 84px;
+        line-height: 84px;
+        text-decoration: none;
+        color: black;
+        padding: 0 10px;
+      }
+
+      .navbar__list li:hover {
+        background: #ccc;
+      }
+
+      .col {
+        width: 300px;
+        display: inline-block;
+        margin-right: 20px;
+        margin-bottom: 20px;
+      }
+
+      .col:nth-child(3n) {
+        margin-right: 0;
+      }
+
+      .row {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .preview img {
+        width: 100%;
+      }
+
+      .intro {
+        color: white;
+        position: absolute;
+        top: 14px;
+        left: 70px;
+      }
+
+      .bottom {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 10px;
+        position: relative;
+        margin-top: -4px;
+      }
+
+      .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      .avatar img {
+        width: 100%;
+      }
+
+      .wrapper h1 {
+        text-align: center;
+      }
+
+      .wrapper h2 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .channel_name {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="wrapper">
+        <div class="navbar__site-name">
+          Twitch Top Games
+        </div>
+        <ul class="navbar__list"></ul>
+      </div>
+    </nav>
+    <div class="wrapper">
+      <h1>League of Legends</h1>
+      <h2>Top 20 popular live streams sorted by current viewers</h2>
+      <div class="row"></div>
+    </div>
+
+    <script>
+      const API_URL = 'https://api.twitch.tv/kraken'
+      const CLIENT_ID = '8lusklnds3i9sj81q8lx2w9mw42bzn'
+      const ACCEPT = 'application/vnd.twitchtv.v5+json'
+      const STREAM_TEMPLATE = `<div class="col">
+              <div class="preview">
+                <img src="$preview" />
+              </div>
+              <div class="bottom">
+                <div class="avatar">
+                  <img src="$logo" />
+                </div>
+                <div class="intro">
+                  <div class="channel_name">$title</div>
+                  <div class="owner_name">$name</div>
+                </div>
+              </div>
+             </div >`
+
+      getGames(function (games) {
+        for (let game of games) {
+          let element = document.createElement('li')
+          element.innerText = game.game.name
+          document.querySelector('.navbar__list').appendChild(element)
+        }
+        changeGame(games[0].game.name)
+      })
+
+      document.querySelector('.navbar__list').addEventListener('click', (e) => {
+        if (e.target.tagName.toLowerCase() === 'li') {
+          const gameName = e.target.innerText
+          changeGame(gameName)
+        }
+      })
+
+      function changeGame(gameName) {
+        document.querySelector('h1').innerText = gameName
+        document.querySelector('.row').innerHTML = ''
+        getStreams(gameName, function (streams) {
+          for (let stream of streams) {
+            appendStream(stream)
+          }
+        })
+      }
+
+      function appendStream(stream) {
+        let element = document.createElement('div')
+        document.querySelector('.row').appendChild(element)
+        element.outerHTML = STREAM_TEMPLATE.replace(
+          '$preview',
+          stream.preview.large,
+        )
+          .replace('$logo', stream.channel.logo)
+          .replace('$title', stream.channel.status)
+          .replace('$name', stream.channel.name)
+      }
+
+      function getGames(callback) {
+        const request = new XMLHttpRequest()
+        request.open('GET', `${API_URL}/games/top?limit=5`, true)
+        request.setRequestHeader('Client-ID', CLIENT_ID)
+        request.setRequestHeader('Accept', ACCEPT)
+        request.onload = function () {
+          if (request.status >= 200 && request.status < 400) {
+            const games = JSON.parse(this.response).top
+            callback(games)
+          }
+        }
+        request.send()
+      }
+
+      function getStreams(gameName, callback) {
+        const request = new XMLHttpRequest()
+        request.open(
+          'GET',
+          `${API_URL}/streams?game=${encodeURIComponent(gameName)}`,
+          true,
+        )
+        request.setRequestHeader('Client-ID', CLIENT_ID)
+        request.setRequestHeader('Accept', ACCEPT)
+        request.onload = function () {
+          if (request.status >= 200 && request.status < 400) {
+            const data = JSON.parse(request.response).streams
+            callback(data)
+          }
+        }
+        request.send()
+      }
+    </script>
+  </body>
+</html>
